@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn Cho Thuê Quá Hạn - Car Rental System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚗 Car Rental System</h1>
+            <p>Quản lý cho thuê ô tô chuyên nghiệp</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="/">🏠 Trang Chủ</a></li>
+                <li><a href="/cars">🚗 Quản lý Xe</a></li>
+                <li><a href="/cars/new">➕ Thêm Xe Mới</a></li>
+                <li><a href="/bookings">📋 Quản lý Đặt Xe</a></li>
+                <li><a href="/bookings/new">📝 Tạo Đặt Xe Mới</a></li>
+                <li><a href="/auth/login">🔐 Đăng nhập</a></li>
+                <li><a href="/auth/register">📝 Đăng ký</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <div class="content">
+                <h2>⏰ Đơn Cho Thuê Quá Hạn (Chưa Hoàn Trả > 24 Giờ)</h2>
+
+                <div style="margin-bottom: 20px;">
+                    <button onclick="window.location.href='/bookings'" style="width: auto;">
+                        👈 Quay Lại Danh Sách Đặt Xe
+                    </button>
+                </div>
+
+                <% if (bookings && bookings.length > 0) { %>
+                    <div class="alert warning">
+                        ⚠️ Có <%= bookings.length %> đơn cho thuê quá hạn cần xử lý
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tên Khách Hàng</th>
+                                <th>Số Hiệu Xe</th>
+                                <th>Ngày Bắt Đầu</th>
+                                <th>Thời Gian Quá Hạn</th>
+                                <th>Tổng Tiền (VND)</th>
+                                <th>Hành Động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% bookings.forEach(booking => { 
+                                const startDate = new Date(booking.startDate);
+                                const now = new Date();
+                                const daysOverdue = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
+                                const hoursOverdue = Math.floor(((now - startDate) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            %>
+                                <tr style="background-color: #ffe6e6;">
+                                    <td><strong><%= booking.customerName %></strong></td>
+                                    <td><%= booking.carNumber %></td>
+                                    <td><%= new Date(booking.startDate).toLocaleDateString('vi-VN') %></td>
+                                    <td>
+                                        <span class="badge" style="background: #ff6b6b; color: white;">
+                                            <%= daysOverdue %> ngày <%= hoursOverdue %> giờ
+                                        </span>
+                                    </td>
+                                    <td><%= booking.totalAmount.toLocaleString('vi-VN') %></td>
+                                    <td>
+                                        <div class="actions">
+                                            <form action="/bookings/<%= booking._id %>/edit" method="GET" style="display: inline;">
+                                                <button type="submit" class="edit">✏️ Cập Nhật</button>
+                                            </form>
+                                            <form action="/bookings/<%= booking._id %>/delete" method="POST" style="display: inline;" onsubmit="return confirm('Bạn có chắc muốn xóa đơn này?');">
+                                                <button type="submit" class="delete">🗑️ Xóa</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+
+                    <div style="margin-top: 30px; padding: 20px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+                        <h3>📌 Hành Động Được Khuyến Nghị</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 0;">1. Liên hệ khách hàng để nhắc nhở hoàn trả</li>
+                            <li style="padding: 8px 0;">2. Cập nhật ngày kết thúc khi khách hàng hoàn trả</li>
+                            <li style="padding: 8px 0;">3. Xem xét tính phí phạt nếu có thỏa thuận</li>
+                            <li style="padding: 8px 0;">4. Ghi chú trạng thái xe khi nhận lại</li>
+                        </ul>
+                    </div>
+                <% } else { %>
+                    <div class="no-data">
+                        <p>✓ Không có đơn cho thuê quá hạn</p>
+                        <p style="color: #999;">Tất cả các đơn đặt xe đều được hoàn trả đúng hạn hoặc chưa bắt đầu</p>
+                        <button onclick="window.location.href='/bookings'">👈 Quay Lại Danh Sách</button>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Car Rental System | All rights reserved</p>
+        </footer>
+    </div>
+</body>
+</html>

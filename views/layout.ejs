@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Car Rental System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚗 Car Rental System</h1>
+            <p>Quản lý cho thuê ô tô chuyên nghiệp</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="/">🏠 Trang Chủ</a></li>
+                <li><a href="/cars">🚗 Quản lý Xe</a></li>
+                <li><a href="/cars/new">➕ Thêm Xe Mới</a></li>
+                <li><a href="/bookings">📋 Quản lý Đặt Xe</a></li>
+                <li><a href="/bookings/new">📝 Tạo Đặt Xe Mới</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <%- body %>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Car Rental System | All rights reserved</p>
+        </footer>
+    </div>
+</body>
+</html>

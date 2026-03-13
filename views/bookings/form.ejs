@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= isEdit ? 'Sửa Đặt Xe' : 'Tạo Đặt Xe Mới' %> - Car Rental System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚗 Car Rental System</h1>
+            <p>Quản lý cho thuê ô tô chuyên nghiệp</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="/">🏠 Trang Chủ</a></li>
+                <li><a href="/cars">🚗 Quản lý Xe</a></li>
+                <li><a href="/cars/new">➕ Thêm Xe Mới</a></li>
+                <li><a href="/bookings">📋 Quản lý Đặt Xe</a></li>
+                <li><a href="/bookings/new">📝 Tạo Đặt Xe Mới</a></li>
+                <li><a href="/auth/login">🔐 Đăng nhập</a></li>
+                <li><a href="/auth/register">📝 Đăng ký</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <div class="content">
+                <h2><%= isEdit ? '✏️ Sửa Thông Tin Đặt Xe' : '📝 Tạo Đặt Xe Mới' %></h2>
+
+                <% if (error) { %>
+                    <div class="alert error">
+                        ✗ <%= error %>
+                    </div>
+                <% } %>
+
+                <form action="<%= isEdit ? '/bookings/' + booking._id + '/update' : '/bookings/create' %>" method="POST" style="max-width: 500px;">
+                    <div class="form-group">
+                        <label for="customerName">Tên Khách Hàng *</label>
+                        <input type="text" 
+                               id="customerName" 
+                               name="customerName" 
+                               value="<%= isEdit ? booking.customerName : '' %>" 
+                               required 
+                               placeholder="Nhập tên khách hàng">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="carNumber">Chọn Xe *</label>
+                        <select id="carNumber" name="carNumber" required>
+                            <option value="">-- Chọn xe --</option>
+                            <% if (cars && cars.length > 0) { %>
+                                <% cars.forEach(car => { %>
+                                    <option value="<%= car.carNumber %>" 
+                                            <%= isEdit && booking.carNumber === car.carNumber ? 'selected' : '' %>>
+                                        <%= car.carNumber %> - <%= car.capacity %> ghế - <%= car.pricePerDay.toLocaleString('vi-VN') %> VND/ngày
+                                    </option>
+                                <% }); %>
+                            <% } %>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="startDate">Ngày Bắt Đầu *</label>
+                        <input type="date" 
+                               id="startDate" 
+                               name="startDate" 
+                               value="<%= isEdit && booking.startDate ? new Date(booking.startDate).toISOString().split('T')[0] : '' %>" 
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endDate">Ngày Kết Thúc</label>
+                        <input type="date" 
+                               id="endDate" 
+                               name="endDate" 
+                               value="<%= isEdit && booking.endDate ? new Date(booking.endDate).toISOString().split('T')[0] : '' %>">
+                        <small style="color: #999; display: block; margin-top: 5px;">Để trống nếu chưa hoàn trả</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="totalAmount">Tổng Tiền (VND)</label>
+                        <input type="number" 
+                               id="totalAmount" 
+                               name="totalAmount" 
+                               value="<%= isEdit ? booking.totalAmount : '' %>" 
+                               min="0" 
+                               readonly 
+                               placeholder="Sẽ được tính toán tự động">
+                        <small style="color: #999; display: block; margin-top: 5px;">Tính toán tự động dựa trên ngày bắt đầu và kết thúc</small>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" style="flex: 1;">
+                            <%= isEdit ? '💾 Cập Nhật' : '✅ Tạo Đặt Xe' %>
+                        </button>
+                        <button type="button" 
+                                onclick="window.location.href='/bookings'" 
+                                style="flex: 1; background: #6c757d;">
+                            ❌ Hủy
+                        </button>
+                    </div>
+                </form>
+
+                <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                    <h3>💡 Lưu Ý</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 5px 0;">- Kiểm tra xung đột lịch được thực hiện tự động</li>
+                        <li style="padding: 5px 0;">- Tổng tiền được tính dựa trên giá xe/ngày</li>
+                        <li style="padding: 5px 0;">- Bạn có thể để trống ngày kết thúc nếu chưa hoàn trả</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Car Rental System | All rights reserved</p>
+        </footer>
+    </div>
+
+    <script>
+        // Optionally: Auto-calculate total amount based on dates and car selection
+        document.getElementById('startDate').addEventListener('change', calculateTotal);
+        document.getElementById('endDate').addEventListener('change', calculateTotal);
+        document.getElementById('carNumber').addEventListener('change', calculateTotal);
+
+        function calculateTotal() {
+            // This could be enhanced to fetch car price via API
+            console.log('Dates changed - total amount can be calculated on server');
+        }
+    </script>
+</body>
+</html>

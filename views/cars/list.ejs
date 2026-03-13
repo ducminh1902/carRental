@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Xe - Car Rental System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚗 Car Rental System</h1>
+            <p>Quản lý cho thuê ô tô chuyên nghiệp</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="/">🏠 Trang Chủ</a></li>
+                <li><a href="/cars">🚗 Quản lý Xe</a></li>
+                <li><a href="/cars/new">➕ Thêm Xe Mới</a></li>
+                <li><a href="/bookings">📋 Quản lý Đặt Xe</a></li>
+                <li><a href="/bookings/new">📝 Tạo Đặt Xe Mới</a></li>
+                <li><a href="/auth/login">🔐 Đăng nhập</a></li>
+                <li><a href="/auth/register">📝 Đăng ký</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <div class="content">
+                <h2>📋 Danh Sách Xe</h2>
+
+                <div style="margin-bottom: 20px;">
+                    <button onclick="window.location.href='/cars/new'" style="width: auto;">
+                        ➕ Thêm Xe Mới
+                    </button>
+                </div>
+
+                <% if (success) { %>
+                    <div class="alert success" style="margin-bottom: 20px;">
+                        ✓ <%= success %>
+                    </div>
+                <% } %>
+                <% if (error) { %>
+                    <div class="alert error" style="margin-bottom: 20px;">
+                        ✗ <%= error %>
+                    </div>
+                <% } %>
+
+                <% if (cars && cars.length > 0) { %>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Số Hiệu Xe</th>
+                                <th>Số Ghế</th>
+                                <th>Giá/Ngày (VND)</th>
+                                <th>Hành Động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% cars.forEach(car => { %>
+                                <tr>
+                                    <td><strong><%= car.carNumber %></strong></td>
+                                    <td><%= car.capacity %></td>
+                                    <td><%= car.pricePerDay.toLocaleString('vi-VN') %></td>
+                                    <td>
+                                        <div class="actions">
+                                            <form action="/cars/<%= car._id %>/edit" method="GET" style="display: inline;">
+                                                <button type="submit" class="edit">✏️ Sửa</button>
+                                            </form>
+                                            <form action="/cars/<%= car._id %>/delete" method="POST" style="display: inline;" onsubmit="return confirm('Bạn có chắc muốn xóa xe này?');">
+                                                <button type="submit" class="delete">🗑️ Xóa</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                <% } else { %>
+                    <div class="no-data">
+                        <p>Không có xe nào trong hệ thống</p>
+                        <button onclick="window.location.href='/cars/new'">➕ Thêm Xe Mới</button>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Car Rental System | All rights reserved</p>
+        </footer>
+    </div>
+</body>
+</html>

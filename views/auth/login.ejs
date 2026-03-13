@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Car Rental System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚗 Car Rental System</h1>
+            <p>Quản lý cho thuê ô tô chuyên nghiệp</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="/">🏠 Trang Chủ</a></li>
+                <li><a href="/auth/register">📝 Đăng ký</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <div class="content">
+                <h2>Đăng nhập</h2>
+                <% if (success) { %>
+                <div class="alert success"><%= success %></div>
+            <% } %>
+            <% if (error) { %>
+                <div class="alert error"><%= error %></div>
+            <% } %>
+            <form action="/auth/login" method="post">
+                    <% if (typeof redirect !== 'undefined' && redirect) { %>
+                    <input type="hidden" name="redirect" value="<%= redirect %>">
+                    <% } %>
+                    <label>Username: <input type="text" name="username" required></label><br>
+                    <label>Password: <input type="password" name="password" required></label><br>
+                    <button type="submit">Đăng nhập</button>
+            </form>
+            <% if (token) { %>
+                <div class="alert success" style="word-break:break-all; margin-top:20px;">
+                    Token: <code><%= token %></code><br>
+                    <small>Hãy sao chép và đặt vào header <code>Authorization: Bearer &lt;token&gt;</code> khi gọi API.</small>
+                </div>
+            <% } %>
+            <p>Lưu ý: Khi đăng nhập qua trình duyệt, JWT được lưu trong cookie (httpOnly). API trả JSON với <code>token</code> khi Accept: application/json.</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Car Rental System | All rights reserved</p>
+        </footer>
+    </div>
+</body>
+</html>

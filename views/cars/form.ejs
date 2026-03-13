@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= isEdit ? 'Sửa Xe' : 'Thêm Xe Mới' %> - Car Rental System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚗 Car Rental System</h1>
+            <p>Quản lý cho thuê ô tô chuyên nghiệp</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="/">🏠 Trang Chủ</a></li>
+                <li><a href="/cars">🚗 Quản lý Xe</a></li>
+                <li><a href="/cars/new">➕ Thêm Xe Mới</a></li>
+                <li><a href="/bookings">📋 Quản lý Đặt Xe</a></li>
+                <li><a href="/bookings/new">📝 Tạo Đặt Xe Mới</a></li>
+                <li><a href="/auth/login">🔐 Đăng nhập</a></li>
+                <li><a href="/auth/register">📝 Đăng ký</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <div class="content">
+                <h2><%= isEdit ? '✏️ Sửa Thông Tin Xe' : '➕ Thêm Xe Mới' %></h2>
+
+                <form action="<%= isEdit ? '/cars/' + car._id + '/update' : '/cars/create' %>" method="POST" style="max-width: 500px;">
+                    <div class="form-group">
+                        <label for="carNumber">Số Hiệu Xe *</label>
+                        <input type="text" 
+                               id="carNumber" 
+                               name="carNumber" 
+                               value="<%= isEdit ? car.carNumber : '' %>" 
+                               required 
+                               placeholder="Nhập số hiệu xe (VD: 29A-12345)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="capacity">Số Ghế Ngồi *</label>
+                        <input type="number" 
+                               id="capacity" 
+                               name="capacity" 
+                               value="<%= isEdit ? car.capacity : '' %>" 
+                               min="1" 
+                               required 
+                               placeholder="Nhập số ghế (VD: 5)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pricePerDay">Giá Cho Thuê/Ngày (VND) *</label>
+                        <input type="number" 
+                               id="pricePerDay" 
+                               name="pricePerDay" 
+                               value="<%= isEdit ? car.pricePerDay : '' %>" 
+                               min="0" 
+                               required 
+                               placeholder="Nhập giá cho thuê (VD: 500000)">
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" style="flex: 1;">
+                            <%= isEdit ? '💾 Cập Nhật' : '✅ Thêm Xe' %>
+                        </button>
+                        <button type="button" 
+                                onclick="window.location.href='/cars'" 
+                                style="flex: 1; background: #6c757d;">
+                            ❌ Hủy
+                        </button>
+                    </div>
+                </form>
+
+                <% if (success) { %>
+                    <div class="alert success" style="margin-top: 20px;">
+                        ✓ <%= success %>
+                    </div>
+                <% } %>
+
+                <% if (error) { %>
+                    <div class="alert error" style="margin-top: 20px;">
+                        ✗ <%= error %>
+                    </div>
+                <% } %>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Car Rental System | All rights reserved</p>
+        </footer>
+    </div>
+</body>
+</html>
