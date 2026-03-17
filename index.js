@@ -1,4 +1,4 @@
-// Load .env (optional - cần cài: npm i dotenv)
+// Load biến môi trường (.env nếu chạy local)
 try { require('dotenv').config(); } catch (_) {}
 
 const express = require("express");
@@ -13,36 +13,54 @@ const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
-// Middleware
-app.use(corsOptions);           // CORS với cấu hình credentials, origins
+
+// ================= MIDDLEWARE =================
+app.use(corsOptions); 
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static files
+
+// ================= STATIC FILE =================
 app.use(express.static(path.join(__dirname, "public")));
 
-// View engine setup - EJS
+
+// ================= VIEW ENGINE =================
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// MongoDB connection
-mongoose.connect("mongodb+srv://MinhLD:ikCbA1o8rPVBKM3y@carrental.8aaqo3g.mongodb.net/carRental")
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.error("MongoDB connection error:", err));
 
-// Routes
-app.get("/", (req, res) => {
-  res.render("index", { title: "Trang Chủ", token: req.query.token || null });
+// ================= CONNECT MONGODB =================
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log("✅ MongoDB connected"))
+.catch(err => {
+  console.error("❌ MongoDB connection error:", err);
+  process.exit(1); // fail luôn nếu lỗi DB
 });
 
-// authentication routes (register & login)
+
+// ================= ROUTES =================
+app.get("/", (req, res) => {
+  res.render("index", { 
+    title: "Trang Chủ", 
+    token: req.query.token || null 
+  });
+});
+
+// auth
 app.use("/auth", authRoutes);
 
-// protected resource routes
+// protected routes
 app.use("/bookings", bookingRoutes);
 app.use("/cars", carRoutes);
 
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
+
+// ================= START SERVER =================
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
