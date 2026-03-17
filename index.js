@@ -30,16 +30,6 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 
-// ================= CONNECT MONGODB =================
-const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/carRental";
-mongoose.connect(mongoUri)
-.then(() => console.log("✅ MongoDB connected"))
-.catch(err => {
-  console.error("❌ MongoDB connection error:", err);
-  process.exit(1); // fail luôn nếu lỗi DB
-});
-
-
 // ================= ROUTES =================
 app.get("/", (req, res) => {
   res.render("index", { 
@@ -58,7 +48,18 @@ app.use("/cars", carRoutes);
 
 // ================= START SERVER =================
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || "0.0.0.0";
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/carRental";
+
+mongoose.connect(mongoUri)
+  .then(() => {
+    console.log("✅ MongoDB connected");
+    app.listen(PORT, HOST, () => {
+      console.log(`🚀 Server running on http://${HOST}:${PORT}`);
+    });
+  })
+  .catch(err => {
+    console.error("❌ MongoDB connection error:", err);
+    process.exit(1);
+  });
