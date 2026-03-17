@@ -61,7 +61,7 @@
                                 <tr>
                                     <td><strong><%= car.carNumber %></strong></td>
                                     <td><%= car.capacity %></td>
-                                    <td><%= car.pricePerDay.toLocaleString('vi-VN') %></td>
+                                    <td><%= (car.pricePerDay ?? 0).toLocaleString('vi-VN') %></td>
                                     <td>
                                         <div class="actions">
                                             <form action="/cars/<%= car._id %>/edit" method="GET" style="display: inline;">
